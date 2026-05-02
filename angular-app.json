@@ -1,0 +1,39 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Leartech preset for Angular applications. Layer on top of default.json — adds groups for Angular framework, leartech npm libs, and the leartech-nginx serving image.",
+  "packageRules": [
+    {
+      "description": "Auto-merge leartech-nginx image bumps — internal serving sidecar, low risk.",
+      "matchPackageNames": ["ghcr.io/mikelear/leartech-nginx"],
+      "groupName": "leartech-nginx",
+      "automerge": true
+    },
+    {
+      "description": "Auto-merge @mikelear/leartech-* npm packages as soon as they're published. Same rationale as go-service: internal libs flow continuously.",
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@mikelear/leartech-"],
+      "groupName": "leartech internal libs",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Group all @angular/* updates together — they version in lockstep. Manual review (no automerge) because Angular bumps usually need a build verification.",
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@angular/"],
+      "groupName": "angular"
+    },
+    {
+      "description": "Group lint tooling — eslint, typescript-eslint, angular-eslint move together.",
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^@angular-eslint/", "^typescript-eslint", "^eslint"],
+      "groupName": "lint tooling"
+    },
+    {
+      "description": "Group test tooling — karma + jasmine ecosystem.",
+      "matchManagers": ["npm"],
+      "matchPackagePatterns": ["^karma", "^jasmine"],
+      "groupName": "test tooling"
+    }
+  ]
+}

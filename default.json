@@ -1,0 +1,40 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Leartech default Renovate preset. Base config every leartech repo extends. Layer go-service.json or angular-app.json on top via extends array.",
+  "extends": ["config:recommended"],
+  "schedule": ["before 9am on Monday"],
+  "platformAutomerge": true,
+  "pinDigests": true,
+  "packageRules": [
+    {
+      "description": "Auto-merge patch updates as one grouped PR per week.",
+      "matchUpdateTypes": ["patch"],
+      "automerge": true,
+      "groupName": "patch updates"
+    },
+    {
+      "description": "Group minor updates for manual review.",
+      "matchUpdateTypes": ["minor"],
+      "groupName": "minor updates"
+    },
+    {
+      "description": "Helm chart updates as one PR per cycle.",
+      "matchManagers": ["helmv3"],
+      "groupName": "helm chart updates"
+    },
+    {
+      "description": "Docker base image bumps as one PR per cycle. pinDigests above ensures these PRs ALSO open when upstream republishes the same tag.",
+      "matchManagers": ["dockerfile"],
+      "groupName": "docker base image updates"
+    }
+  ],
+  "customManagers": [
+    {
+      "description": "Track image: refs in .lighthouse/ pipeline yaml so consumers' catalog task pins (e.g. ghcr.io/mikelear/playwright-runner:0.25.3) get bump PRs.",
+      "customType": "regex",
+      "fileMatch": ["\\.lighthouse/.+\\.yaml$"],
+      "matchStrings": ["image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)"],
+      "datasourceTemplate": "docker"
+    }
+  ]
+}

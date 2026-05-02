@@ -1,0 +1,24 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Leartech preset for Go services. Layer on top of default.json — adds groups for the leartech-go-runtime base image and internal Go libraries.",
+  "packageRules": [
+    {
+      "description": "Auto-merge leartech-go-runtime image bumps — patch/minor cadence, internal lib, low risk.",
+      "matchPackageNames": ["ghcr.io/mikelear/leartech-go-runtime"],
+      "groupName": "leartech-go-runtime",
+      "automerge": true
+    },
+    {
+      "description": "Auto-merge leartech-go-common + generated leartech-go-packages/* as soon as they land. 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
+      "matchManagers": ["gomod"],
+      "matchPackagePatterns": [
+        "^github.com/mikelear/leartech-go-common",
+        "^github.com/mikelear/leartech-go-packages/"
+      ],
+      "groupName": "leartech internal libs",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    }
+  ]
+}
