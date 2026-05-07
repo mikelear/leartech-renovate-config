@@ -3,10 +3,12 @@
   "description": "Leartech preset for Go services. Layer on top of default.json — adds groups for the leartech-go-runtime base image and internal Go libraries.",
   "packageRules": [
     {
-      "description": "Auto-merge leartech-go-runtime image bumps — patch/minor cadence, internal lib, low risk.",
+      "description": "Auto-merge leartech-go-runtime image bumps as soon as they land. 'at any time' overrides default Monday-only schedule — internal lib, low risk, but consumers can be blocked on it (e.g. fleet Go-1.26 bump 2026-05-07).",
       "matchPackageNames": ["ghcr.io/mikelear/leartech-go-runtime"],
       "groupName": "leartech-go-runtime",
-      "automerge": true
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
     },
     {
       "description": "Auto-merge leartech-go-common + generated leartech-go-packages/* as soon as they land. 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
