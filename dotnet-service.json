@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Leartech preset for .NET services. Layer on top of default.json — adds groups for the leartech-dotnet-runtime base image and the internal Leartech.* NuGet packages (auto-generated SDK clients + leartech-dotnet-common modules).",
+  "packageRules": [
+    {
+      "description": "Auto-merge leartech-dotnet-runtime image bumps as soon as they land. 'at any time' overrides default Monday-only schedule — internal lib, low risk, but consumers can be blocked on it (e.g. fleet .NET 9 → 10 bump).",
+      "matchPackageNames": ["ghcr.io/mikelear/leartech-dotnet-runtime"],
+      "groupName": "leartech-dotnet-runtime",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Auto-merge internal Leartech.* NuGet packages as soon as they land. Covers leartech-dotnet-common modules (Leartech.Auth, Leartech.Logging, Leartech.Config) plus auto-generated SDK clients (Leartech.<ServiceName>.Client). 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
+      "matchManagers": ["nuget"],
+      "matchPackagePatterns": ["^Leartech\\."],
+      "groupName": "leartech internal packages (dotnet)",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    }
+  ]
+}
