@@ -1,0 +1,23 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "description": "Leartech preset for Rust services. Layer on top of default.json — adds groups for the leartech-rust-runtime base image and the leartech-common crate (git-tagged dep until a private cargo registry exists).",
+  "packageRules": [
+    {
+      "description": "Auto-merge leartech-rust-runtime image bumps as soon as they land. 'at any time' overrides default Monday-only schedule — internal lib, low risk, but consumers can be blocked on it (e.g. fleet rust-1.x bump).",
+      "matchPackageNames": ["ghcr.io/mikelear/leartech-rust-runtime"],
+      "groupName": "leartech-rust-runtime",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Auto-merge leartech-common (Rust common library, distributed via git tag) as soon as it lands. 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
+      "matchManagers": ["cargo"],
+      "matchPackageNames": ["leartech-common"],
+      "groupName": "leartech internal libs (rust)",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    }
+  ]
+}
