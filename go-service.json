@@ -1,13 +1,30 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "description": "Leartech preset for Go services. Layer on top of default.json \u2014 adds groups for the leartech-go-runtime base image and internal Go libraries.",
+  "description": "Leartech preset for Go services. Layer on top of default.json — adds groups for the leartech-go-runtime base image, internal Go libraries, the Go toolchain, and security-driven bumps.",
+  "osvVulnerabilityAlerts": true,
   "packageRules": [
     {
-      "description": "Auto-merge leartech-go-runtime image bumps as soon as they land. 'at any time' overrides default Monday-only schedule \u2014 internal lib, low risk, but consumers can be blocked on it (e.g. fleet Go-1.26 bump 2026-05-07).",
+      "description": "Only propose Go dependency updates that stay source-compatible with this repo's go directive, so a bump never arrives un-mergeable (needing a go-line bump to accept).",
+      "matchManagers": ["gomod"],
+      "constraintsFiltering": "strict"
+    },
+    {
+      "description": "Auto-merge leartech-go-runtime image bumps as soon as they land. 'at any time' overrides default Monday-only schedule — internal lib, low risk, but consumers can be blocked on it (e.g. fleet Go-1.26 bump 2026-05-07).",
       "matchPackageNames": [
         "ghcr.io/mikelear/leartech-go-runtime"
       ],
       "groupName": "leartech-go-runtime",
+      "schedule": [
+        "at any time"
+      ],
+      "automerge": true,
+      "automergeStrategy": "squash"
+    },
+    {
+      "description": "Keep the go.mod toolchain directive current. Renovate proposes toolchain bumps by default; group + auto-merge them 'at any time' because a stale toolchain is what turns every repo's govulncheck gate red at once when a Go stdlib advisory drops (seen fleet-wide 2026-10-08: go1.26.6 -> go1.27.2).",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["toolchain"],
+      "groupName": "go toolchain",
       "schedule": [
         "at any time"
       ],
@@ -31,6 +48,13 @@
       ],
       "automerge": true,
       "automergeStrategy": "squash"
+    },
+    {
+      "description": "Security-driven bumps (OSV/GitHub advisories) open immediately, overriding the Monday-only default schedule, so a vulnerable dependency is not left red for up to a week. Grouped so the fix PR is one unit.",
+      "matchManagers": ["gomod"],
+      "isVulnerabilityAlert": true,
+      "groupName": "go security updates",
+      "schedule": ["at any time"]
     }
   ]
 }
