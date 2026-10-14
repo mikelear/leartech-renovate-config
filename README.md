@@ -58,6 +58,9 @@ In a consumer repo's `renovate.json`:
 
 - Auto-merge group for `ghcr.io/mikelear/leartech-go-runtime` image bumps
 - Auto-merge group for `leartech-go-common` + `leartech-go-packages/*` gomod updates with `at any time` schedule (overrides the weekly default — internal libs need to flow within hours)
+- Auto-merge group for the `go.mod` `toolchain` directive with `at any time` schedule. A stale toolchain is what turns every repo's `govulncheck` gate red at once when a Go stdlib advisory drops (fleet-wide on 2026-10-08: `go1.26.6` → `go1.27.2`), so it flows immediately rather than waiting for the weekly window.
+- `constraintsFiltering: strict` on all `gomod` updates, so a dependency bump is only proposed if it stays source-compatible with the repo's `go` directive — it never arrives un-mergeable (needing a `go`-line bump to accept).
+- `osvVulnerabilityAlerts` plus a `gomod` `isVulnerabilityAlert` rule scheduled `at any time`, so OSV/GitHub-advisory fixes open immediately instead of being held up to a week by the Monday-only default.
 
 ## What `angular-app.json` adds
 
