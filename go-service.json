@@ -32,7 +32,7 @@
       "automergeStrategy": "squash"
     },
     {
-      "description": "Auto-merge leartech-{go,bus}-common + generated leartech-{go,bus}-packages/* as soon as they land. 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
+      "description": "Auto-merge leartech-{go,bus}-common + generated leartech-{go,bus}-packages/* as soon as they land. 'at any time' overrides the default Monday-only schedule because internal libs may need to flow within hours — and the go-common release fires a trigger-renovate job precisely so that flow starts within minutes. That fast flow is kept deliberately. What was MISSING was a ceiling on how MANY consumer repos open their bump PR at the same instant: with no limit, one tag opened a PR in every repo at once and every .lighthouse pipeline started together, swamping Tekton. The fix is the fleet-wide prConcurrentLimit/prHourlyLimit/branchConcurrentLimit in default.json, which staggers the SAME fast flow into waves the cluster can absorb — the trigger still does its job, the bumps still land within hours, they just arrive a few repos at a time rather than all at once.",
       "matchManagers": [
         "gomod"
       ],
