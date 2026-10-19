@@ -32,7 +32,7 @@
       "automergeStrategy": "squash"
     },
     {
-      "description": "leartech-{go,bus}-common + generated packages flow fast, but NOT instantly on every tag. A go-common release fires the trigger-renovate job, and with no fleet-wide throttle that opened one PR in every consumer repo at once — each starting its .lighthouse pipeline together and swamping the Tekton cluster. Keeping these on the Monday schedule (inherited from default.json) rather than 'at any time', plus the fleet prHourlyLimit below, staggers the fan-out: the bumps still flow within the week and a genuinely urgent one can be cherry-picked by hand, but a single library release no longer stampedes every pipeline simultaneously. automerge stays on so a bump that is proposed still lands without a human once its own gates pass.",
+      "description": "Auto-merge leartech-{go,bus}-common + generated leartech-{go,bus}-packages/* as soon as they land. 'at any time' overrides the default Monday-only schedule because internal libs may need to flow within hours — and the go-common release fires a trigger-renovate job precisely so that flow starts within minutes. That fast flow is kept deliberately. What was MISSING was a ceiling on how MANY consumer repos open their bump PR at the same instant: with no limit, one tag opened a PR in every repo at once and every .lighthouse pipeline started together, swamping Tekton. The fix is the fleet-wide prConcurrentLimit/prHourlyLimit/branchConcurrentLimit in default.json, which staggers the SAME fast flow into waves the cluster can absorb — the trigger still does its job, the bumps still land within hours, they just arrive a few repos at a time rather than all at once.",
       "matchManagers": [
         "gomod"
       ],
@@ -43,6 +43,9 @@
         "^github.com/mikelear/leartech-bus-packages/"
       ],
       "groupName": "leartech internal libs",
+      "schedule": [
+        "at any time"
+      ],
       "automerge": true,
       "automergeStrategy": "squash"
     },
