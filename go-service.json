@@ -32,7 +32,7 @@
       "automergeStrategy": "squash"
     },
     {
-      "description": "Auto-merge leartech-{go,bus}-common + generated leartech-{go,bus}-packages/* as soon as they land. 'at any time' overrides default Monday-only schedule because internal libs may need to flow within hours.",
+      "description": "leartech-{go,bus}-common + generated packages flow fast, but NOT instantly on every tag. A go-common release fires the trigger-renovate job, and with no fleet-wide throttle that opened one PR in every consumer repo at once — each starting its .lighthouse pipeline together and swamping the Tekton cluster. Keeping these on the Monday schedule (inherited from default.json) rather than 'at any time', plus the fleet prHourlyLimit below, staggers the fan-out: the bumps still flow within the week and a genuinely urgent one can be cherry-picked by hand, but a single library release no longer stampedes every pipeline simultaneously. automerge stays on so a bump that is proposed still lands without a human once its own gates pass.",
       "matchManagers": [
         "gomod"
       ],
@@ -43,9 +43,6 @@
         "^github.com/mikelear/leartech-bus-packages/"
       ],
       "groupName": "leartech internal libs",
-      "schedule": [
-        "at any time"
-      ],
       "automerge": true,
       "automergeStrategy": "squash"
     },
