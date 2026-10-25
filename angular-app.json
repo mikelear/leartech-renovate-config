@@ -30,6 +30,11 @@
       "groupName": "lint tooling"
     },
     {
+      "description": "jasmine 7 drops the APIs karma-jasmine 5.1 needs (jasmine/jasmine#2084); Angular Karma cannot run 7.x. Pin below 7 until karma-jasmine catches up (6.x transitional is allowed).",
+      "matchPackageNames": ["jasmine-core", "@types/jasmine"],
+      "allowedVersions": "<7"
+    },
+    {
       "description": "Group test tooling — karma + jasmine ecosystem.",
       "matchManagers": ["npm"],
       "matchPackagePatterns": ["^karma", "^jasmine"],
