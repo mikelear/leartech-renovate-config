@@ -21,6 +21,15 @@
       "schedule": ["at any time"],
       "automerge": true,
       "automergeStrategy": "squash"
+    },
+    {
+      "description": "Flow go.mod `toolchain` bumps fast and on their own. Renovate already proposes toolchain updates by default (gomod depType=toolchain), but the base preset's Monday-only patch/minor grouping buried them — a stdlib advisory fixed only by a toolchain patch (e.g. GO-2026-6809 → go1.27.3) then waited a week or became a hand-edit per repo. The catalog Go tasks run GOTOOLCHAIN=auto, so bumping this directive is what moves the build/test/scan toolchain. Scoped to toolchain only; the `go` (source-compat floor) is left alone per Renovate's own guidance.",
+      "matchManagers": ["gomod"],
+      "matchDepTypes": ["toolchain"],
+      "groupName": "go toolchain",
+      "schedule": ["at any time"],
+      "automerge": true,
+      "automergeStrategy": "squash"
     }
   ]
 }
