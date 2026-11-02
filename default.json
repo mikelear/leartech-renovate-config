@@ -1,8 +1,12 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
   "description": "Leartech default Renovate preset. Base config every leartech repo extends. Layer go-service.json or angular-app.json on top via extends array.",
-  "extends": ["config:recommended"],
-  "schedule": ["before 9am on Monday"],
+  "extends": [
+    "config:recommended"
+  ],
+  "schedule": [
+    "before 9am on Monday"
+  ],
   "platformAutomerge": true,
   "dependencyDashboard": true,
   "dependencyDashboardAutoclose": true,
@@ -16,32 +20,62 @@
   "packageRules": [
     {
       "description": "Auto-merge patch updates as one grouped PR per week.",
-      "matchUpdateTypes": ["patch"],
+      "matchUpdateTypes": [
+        "patch"
+      ],
       "automerge": true,
       "groupName": "patch updates"
     },
     {
       "description": "Group minor updates for manual review.",
-      "matchUpdateTypes": ["minor"],
+      "matchUpdateTypes": [
+        "minor"
+      ],
       "groupName": "minor updates"
     },
     {
       "description": "Helm chart updates as one PR per cycle.",
-      "matchManagers": ["helmv3"],
+      "matchManagers": [
+        "helmv3"
+      ],
       "groupName": "helm chart updates"
     },
     {
       "description": "Docker base image bumps as one PR per cycle. pinDigests above ensures these PRs ALSO open when upstream republishes the same tag.",
-      "matchManagers": ["dockerfile"],
+      "matchManagers": [
+        "dockerfile"
+      ],
       "groupName": "docker base image updates"
+    },
+    {
+      "description": "Our own OCI chart deps (product-first/oci-charts/leartech-*) under an umbrella: open the bump PR IMMEDIATELY. No weekly schedule, no release-age wait, its own hourly/concurrent budget, one PR per chart (not grouped) \u2014 so an umbrella tracks its services the instant they release. The release's trigger-renovate kick does the rest.",
+      "matchManagers": [
+        "helmv3"
+      ],
+      "matchDatasources": [
+        "docker"
+      ],
+      "matchPackageNames": [
+        "/^us-central1-docker\\.pkg\\.dev/product-first/oci-charts/leartech-/"
+      ],
+      "schedule": [
+        "at any time"
+      ],
+      "minimumReleaseAge": "0 days",
+      "prPriority": 10,
+      "groupName": "{{{depName}}}"
     }
   ],
   "customManagers": [
     {
       "description": "Track image: refs in .lighthouse/ pipeline yaml so consumers' catalog task pins (e.g. ghcr.io/mikelear/playwright-runner:0.25.3) get bump PRs.",
       "customType": "regex",
-      "fileMatch": ["\\.lighthouse/.+\\.yaml$"],
-      "matchStrings": ["image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)"],
+      "fileMatch": [
+        "\\.lighthouse/.+\\.yaml$"
+      ],
+      "matchStrings": [
+        "image:\\s*(?<depName>[^:\\s]+):(?<currentValue>[^\\s]+)"
+      ],
       "datasourceTemplate": "docker"
     }
   ]
