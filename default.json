@@ -48,7 +48,7 @@
       "groupName": "docker base image updates"
     },
     {
-      "description": "Our own OCI chart deps (product-first/oci-charts/leartech-*) under an umbrella: open the bump PR IMMEDIATELY. No weekly schedule, no release-age wait, its own hourly/concurrent budget, one PR per chart (not grouped) \u2014 so an umbrella tracks its services the instant they release. The release's trigger-renovate kick does the rest.",
+      "description": "Our own OCI chart deps (product-first/oci-charts/leartech-*) under an umbrella: bump IMMEDIATELY and self-approve. Tide only merges a PR carrying label 'approved' (its query is `label:approved`), and Renovate never adds one \u2014 so without this an umbrella bump never even enters the pool. Tide still gates on the required checks, so this is the label that puts the PR in the pool, not a bypass of the checks.",
       "matchManagers": [
         "helmv3"
       ],
@@ -63,7 +63,10 @@
       ],
       "minimumReleaseAge": "0 days",
       "prPriority": 10,
-      "groupName": "{{{depName}}}"
+      "groupName": "{{{depName}}}",
+      "addLabels": [
+        "approved"
+      ]
     }
   ],
   "customManagers": [
